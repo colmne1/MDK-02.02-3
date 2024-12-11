@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Net;
 using Common;
 using System.Threading;
+using System.IO;
 
 namespace Snake_Kochetov
 {
@@ -211,6 +212,13 @@ namespace Snake_Kochetov
                 }
                 Send();
             }
+        }
+        public static void SaveLeaders()
+        {
+            string json = JsonConvert.SerializeObject(Leaders);
+            StreamWriter SW = new StreamWriter("./leaders.txt");
+            SW.WriteLine(json);
+            SW.Close();
         }
     }
 }
