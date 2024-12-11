@@ -232,5 +232,20 @@ namespace Snake_Kochetov
             }
             else Leaders = new List<Leaders>();
         }
+        static void Main(string[] args)
+        {
+            try
+            {
+                Thread tRec = new Thread(new ThreadStart(Receiver));
+                tRec.Start();
+                Thread tTime = new Thread(Timer);
+                tTime.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Возникло исключение: " + ex.ToString() + "\n " + ex.Message);
+            }
+        }
     }
 }
