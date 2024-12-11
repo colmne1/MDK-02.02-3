@@ -16,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace SnakeWPF
 {
@@ -43,6 +45,50 @@ namespace SnakeWPF
         {
             tRec = new Thread(new ThreadStart(Receiver));
             tRec.Start();
+        }
+
+        public void OpenPage(Page PageOpen)
+        {
+            frame.Navigate(PageOpen);
+        }
+
+        public void Receiver()
+        {
+            receivingUdpClient = new UdpClient(int.Parse(ViewModelUserSettings.Port));
+            IPEndPoint RemoteIpEndPoint = null;
+
+            try
+            {
+                while (true)
+                {
+                    byte[] receiveBytes = receivingUdpClient.Receive(ref RemoteIpEndPoint);
+                    string returnData = Encoding.UTF8.GetString(receiveBytes);
+
+                    if (ViewModelGames == null)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            OpenPage(Game);
+                        });
+                    }
+                    ViewModelGames = JsonConvert.DeserializeObject<ViewModelGames>(returnData.ToString());
+                    if (ViewModelGames.SnakesPlayers.GameOver)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            OpenPage(new Pages.EndGame());
+                        });
+                    }
+                    else
+                    {
+                        Game.CreateUI();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Возникло исключение: " + ex.ToString() + "\n" + ex.Message);
+            }
         }
     }
 }
