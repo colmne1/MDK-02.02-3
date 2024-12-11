@@ -10,7 +10,7 @@
 
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="/SnakeWPF;component/Images/bacground2.jpg"/>
+            <ImageBrush ImageSource="/SnakeWPF;component/Images/background.jpg"/>
         </Grid.Background>
         <Grid>
             <Grid Width="320" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center">
